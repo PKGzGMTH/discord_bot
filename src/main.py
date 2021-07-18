@@ -33,6 +33,9 @@ async def on_message(message) :
     if str(message.content).startswith("หิวข้าว"):
         await message.channel.send('จะกินอาหารฉุกเฉินไหมล่ะห้ะ')
     
+    if str(message.content).startswith("ทำไร"):
+        await message.channel.send('ทำอุปกรณ์')
+    
     if str(message.content).lower() in ['fuck','kuy']:
         await message.channel.purge(limit=1)
 
