@@ -1,43 +1,73 @@
 import discord, myToken
 from discord.ext import commands
 
+import discord, myToken
+from discord.ext import commands
+import random
 
-client = discord.Client()
-bot = commands.Bot(command_prefix= '>')
+description = '''An example bot to showcase the discord.ext.commands extension
+module.
+There are a number of utility commands being showcased here.'''
+
+intents = discord.Intents.default()
+intents.members = True
+
+bot = commands.Bot(command_prefix='.', description=description, intents=intents)
 
 @bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(bot))
+    print(f'Logged in as {bot.user} (ID: {bot.user.id})')
+    print('-'*80)
 
-@bot.command(passcontext=True, help = ':Let Me join the Voice channel')
-async def join(ctx):
-    channel = ctx.author.voice.channel
-    await channel.connect()
-    print('\njoining voice chat ',ctx.author.voice.channel)
-    
-@bot.command(passcontext=True, help = ':Let Me leave the Voice channel')
-async def leave(ctx):
-    await ctx.voice_client.disconnect()
-    print('leave voice chat',ctx.author.voice.channel)
+@bot.command()
+async def add(ctx, left: int, right: int):
+    """Adds two numbers together."""
+    await ctx.send(left + right)
 
-@bot.event
-async def on_message(message) :
-    # bot.process_commands(msg) is a couroutine that must be called here since we are overriding the on_message event
-    await bot.process_commands(message) 
-    if str(message.content).lower().startswith("hello"):
-        await message.channel.send('Hi!')
-    
-    if str(message.content).lower().startswith("paimon"):
-        await message.channel.send('ว่าจะได๋?')
-    
-    if str(message.content).startswith("หิวข้าว"):
-        await message.channel.send('จะกินอาหารฉุกเฉินไหมล่ะห้ะ')
-    
-    if str(message.content).startswith("ทำไร"):
-        await message.channel.send('ทำอุปกรณ์')
-    
-    if str(message.content).lower() in ['fuck','kuy']:
-        await message.channel.purge(limit=1)
+@bot.command()
+async def roll(ctx, dice: str):
+    """Rolls a dice in NdN format."""
+    try:
+        rolls, limit = map(int, dice.split('d'))
+    except Exception:
+        await ctx.send('Format has to be in NdN!')
+        return
 
+    result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+    await ctx.send(result)
+
+@bot.command(description='For when you wanna settle the score some other way')
+async def choose(ctx, *choices: str):
+    """Chooses between multiple choices."""
+    await ctx.send(random.choice(choices))
+
+@bot.command()
+async def repeat(ctx, times: int, content='repeating...'):
+    """Repeats a message multiple times."""
+    for i in range(times):
+        await ctx.send(content)
+
+@bot.command()
+async def joined(ctx, member: discord.Member):
+    """Says when a member joined."""
+    await ctx.send(f'{member.name} joined in {member.joined_at}')
+
+@bot.command()
+async def what_time_is_it(ctx):
+    """Says when a member joined."""
+    await ctx.send(f'it\'s high noon')
+
+@bot.group()
+async def cool(ctx):
+    """Says if a user is cool.
+    In reality this just checks if a subcommand is being invoked.
+    """
+    if ctx.invoked_subcommand is None:
+        await ctx.send(f'No, {ctx.subcommand_passed} is not cool')
+
+@cool.command(name='bot')
+async def _bot(ctx):
+    """Is the bot cool?"""
+    await ctx.send('Yes, the bot is cool.')
 
 bot.run(myToken.get())
