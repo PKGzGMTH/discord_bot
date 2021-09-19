@@ -1,8 +1,11 @@
-import discord, myToken
+import discord, random, json, ast
 from discord.ext import commands
-import random
 
-genshin_chr = ['Albedo', 'Aloy', 'Amber', 'Barbara', 'Beidou', 'Bennett', 'Chongyun', 'Diluc', 'Diona', 'Eula', 'Fischl', 'Ganyu', 'Hu Tao', 'Jean', 'Kaedehara Kazuha', 'Kaeya', 'Kamisato Ayaka', '\nKeqing', 'Klee', 'Kujou Sara', 'Lisa', 'Mona', 'Ningguang', 'Noelle', 'Qiqi', 'Raiden Shogun', 'Razor', 'Rosaria', 'Sayu', 'Sucrose', 'Tartaglia', 'Traveler', 'Venti', 'Xiangling', 'Xiao', 'Xingqiu', 'Xinyan', 'Yanfei', 'Yoimiya', 'Zhongli', 'Dainsleif', 'Gorou', 'Sangonomiya Kokomi', 'Thoma', 'Yae Miko']
+f = open('data.json')
+data = json.load(f)
+f.close
+
+genshin_chr = data["genshin_chr"].split(',')
 
 description = '''An example bot to showcase the discord.ext.commands extension
 module.
@@ -53,13 +56,13 @@ async def joined(ctx, member: discord.Member):
 
 @bot.command()
 async def what_time_is_it(ctx):
-    """Says when a member joined."""
+    """Just Ask Question."""
     await ctx.send(f'it\'s high noon')
 
 @bot.command()
 async def genshinroll(ctx):
+    """pull some charecter in Genshin Impact."""
     char = genshin_chr[random.randint(0,22)]
-    """Says when a member joined."""
     usr = str(ctx.message.author).split('#')[0]
     await ctx.send(f'{usr} got {char}')
 
@@ -82,4 +85,4 @@ async def _bot(ctx):
     """Is the bot cool?"""
     await ctx.send('Yes, the bot is cool.')
 
-bot.run(myToken.get())
+bot.run(data["TOKEN"])
