@@ -1,9 +1,8 @@
 import discord, myToken
 from discord.ext import commands
-
-import discord, myToken
-from discord.ext import commands
 import random
+
+genshin_chr = ['Albedo', 'Aloy', 'Amber', 'Barbara', 'Beidou', 'Bennett', 'Chongyun', 'Diluc', 'Diona', 'Eula', 'Fischl', 'Ganyu', 'Hu Tao', 'Jean', 'Kaedehara Kazuha', 'Kaeya', 'Kamisato Ayaka', '\nKeqing', 'Klee', 'Kujou Sara', 'Lisa', 'Mona', 'Ningguang', 'Noelle', 'Qiqi', 'Raiden Shogun', 'Razor', 'Rosaria', 'Sayu', 'Sucrose', 'Tartaglia', 'Traveler', 'Venti', 'Xiangling', 'Xiao', 'Xingqiu', 'Xinyan', 'Yanfei', 'Yoimiya', 'Zhongli', 'Dainsleif', 'Gorou', 'Sangonomiya Kokomi', 'Thoma', 'Yae Miko']
 
 description = '''An example bot to showcase the discord.ext.commands extension
 module.
@@ -56,6 +55,19 @@ async def joined(ctx, member: discord.Member):
 async def what_time_is_it(ctx):
     """Says when a member joined."""
     await ctx.send(f'it\'s high noon')
+
+@bot.command()
+async def genshinroll(ctx):
+    char = genshin_chr[random.randint(0,22)]
+    """Says when a member joined."""
+    usr = str(ctx.message.author).split('#')[0]
+    await ctx.send(f'{usr} got {char}')
+
+@bot.command(pass_context = True) #passing context
+async def salute(ctx): #context gets passed into the first parameter
+    print(str(ctx.message.author))
+    print(str(ctx.message.channel))
+    print(str(ctx.message.content))
 
 @bot.group()
 async def cool(ctx):
