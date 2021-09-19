@@ -1,4 +1,4 @@
-import discord, random, json, ast
+import discord, random, json
 from discord.ext import commands
 
 f = open('data.json')
@@ -7,8 +7,7 @@ f.close
 
 genshin_chr = data["genshin_chr"].split(',')
 
-description = '''An example bot to showcase the discord.ext.commands extension
-module.
+description = '''An example bot to showcase the discord.ext.commands extension module.
 There are a number of utility commands being showcased here.'''
 
 intents = discord.Intents.default()
@@ -74,9 +73,7 @@ async def salute(ctx): #context gets passed into the first parameter
 
 @bot.group()
 async def cool(ctx):
-    """Says if a user is cool.
-    In reality this just checks if a subcommand is being invoked.
-    """
+    """Says if a user is cool."""
     if ctx.invoked_subcommand is None:
         await ctx.send(f'No, {ctx.subcommand_passed} is not cool')
 
